@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"net/url"
+	"reflect"
 	"testing"
 
 	mockdb "github.com/PhilipFelipe/simple-bank/db/mock"
@@ -82,7 +83,7 @@ func TestGetAccountAPI(t *testing.T) {
 			tc.buildStubs(store)
 
 			// start test server and send request
-			server := NewServer(store)
+			server := newTestServer(t, store)
 			recorder := httptest.NewRecorder()
 
 			url := fmt.Sprintf("/accounts/%d", tc.accountID)
@@ -180,7 +181,7 @@ func TestListAccountAPI(t *testing.T) {
 			tc.buildStubs(store)
 
 			// start test server and send request
-			server := NewServer(store)
+			server := newTestServer(t, store)
 			recorder := httptest.NewRecorder()
 
 			url := fmt.Sprintf("/accounts?page_size=%d&page_id=%d", tc.pageSize, tc.PageID)
@@ -255,7 +256,7 @@ func TestCreateAccountAPI(t *testing.T) {
 			tc.buildStubs(store)
 
 			// start test server and send request
-			server := NewServer(store)
+			server := newTestServer(t, store)
 			recorder := httptest.NewRecorder()
 
 			// Marshal body data to JSON
@@ -296,4 +297,57 @@ func requireQueryParamsMatch(t *testing.T, values url.Values) {
 	pageSize := values.Get("page_size")
 	require.NotEmpty(t, pageID)
 	require.NotEmpty(t, pageSize)
+}
+
+func Test_randomAccount(t *testing.T) {
+	tests := []struct {
+		name string
+		want db.Account
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := randomAccount(); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("randomAccount() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_requireBodyMatchAccount(t *testing.T) {
+	type args struct {
+		t       *testing.T
+		body    *bytes.Buffer
+		account db.Account
+	}
+	tests := []struct {
+		name string
+		args args
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			requireBodyMatchAccount(tt.args.t, tt.args.body, tt.args.account)
+		})
+	}
+}
+
+func Test_requireQueryParamsMatch(t *testing.T) {
+	type args struct {
+		t      *testing.T
+		values url.Values
+	}
+	tests := []struct {
+		name string
+		args args
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			requireQueryParamsMatch(tt.args.t, tt.args.values)
+		})
+	}
 }
